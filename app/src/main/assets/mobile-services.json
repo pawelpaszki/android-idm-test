@@ -17,6 +17,13 @@
         "resource": "myapp-android-public",
         "ssl-required": "external"
       }
+    },
+    {
+      "id": "metrics-myapp-android",
+      "name": "metrics",
+      "type": "metrics",
+      "url": "https://aerogear-app-metrics-myproject.10.32.241.118.nip.io/metrics",
+      "config": {}
     }
   ]
 }

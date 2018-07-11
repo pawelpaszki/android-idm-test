@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int LOGIN_RESULT_CODE = 1;
 
+    AuthService authService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        AuthService authService = MobileCore.getInstance().getService(AuthService.class);
+        authService = MobileCore.getInstance().getService(AuthService.class);
         AuthServiceConfiguration authServiceConfig = new AuthServiceConfiguration
                 .AuthConfigurationBuilder()
                 .withRedirectUri("com.aerogear.androidshowcase:/callback")
@@ -34,12 +36,17 @@ public class MainActivity extends AppCompatActivity {
         authService.login(options, new Callback<UserPrincipal>() {
             @Override
             public void onSuccess(UserPrincipal principal) {
-                Log.d("", "Success");
+                UserPrincipal currentUser = authService.currentUser();
+                boolean hasAdminPermissions = currentUser.hasRealmRole("user_admin");
+                boolean isModerator = currentUser.hasResourceRole("my_resource", "user_moderator");
+                Log.d("hasAdminPermissions", String.valueOf(hasAdminPermissions));
+                Log.d("isModerator", String.valueOf(isModerator));
+                // do stuff here
             }
 
             @Override
             public void onError(Throwable error) {
-                Log.d("", error.getMessage());
+                // do stuff here
             }
         });
     }
@@ -47,8 +54,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOGIN_RESULT_CODE) {
-            AuthService authService = MobileCore.getInstance().getService(AuthService.class);
             authService.handleAuthResult(data);
+        }
+    }
+
+    public void logout(View view) {
+        UserPrincipal currentUser = authService.currentUser();
+        if (currentUser != null) {
+            authService.logout(currentUser, new Callback<UserPrincipal>() {
+                @Override
+                public void onSuccess() {
+                    Log.d("", "logout");
+                    // User Logged Out Successfully and local Auth tokens were Deleted
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    Log.d("", "error");
+                }
+            });
         }
     }
 }
