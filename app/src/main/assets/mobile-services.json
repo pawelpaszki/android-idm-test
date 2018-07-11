@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "clusterName": "https://10.32.241.118:8443",
+  "namespace": "myproject",
+  "clientId": "myapp-android",
+  "services": [
+    {
+      "id": "keycloak-myapp-android-public",
+      "name": "keycloak",
+      "type": "keycloak",
+      "url": "https://keycloak-myproject.10.32.241.118.nip.io/auth",
+      "config": {
+        "auth-server-url": "https://keycloak-myproject.10.32.241.118.nip.io/auth",
+        "confidential-port": 0,
+        "public-client": true,
+        "realm": "myproject",
+        "resource": "myapp-android-public",
+        "ssl-required": "external"
+      }
+    }
+  ]
+}
